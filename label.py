@@ -45,16 +45,17 @@ class Labeling_processor():
         head_node = []
         browser = ['Chrome','Safari','Firefox','Mozilla']
 
-        def check_useragent(tmp_data):
+        def check_useragent(tmp_data,tmp_index):
             count = 0
             for j in browser:
                 if j in tmp_data[12]:
-                    count += 1
-            if count > 0:
-                dataset[i].append('browser')
-                head_node.append(dataset[i])
-            else:
-                dataset[i].append('background APP')
+		    dataset[tmp_index].append('browser')
+                    headnode.append(tmp_data)
+		    break
+            	else:
+            	    count += 1
+                if count == len(browser):
+                    dataset[tmp_index].append('background APP')
 
 
         for i in range(len(dataset)):
