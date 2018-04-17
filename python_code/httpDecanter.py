@@ -194,9 +194,13 @@ class httpDecanter():
             if reqLen != 0:
                 num[0] += 1
                 averageReq = (float(trainDict[label]['request_len']) * (num[0] - 1) + reqLen) / num[0]
+            else:
+                averageReq = reqLen
             if resLen != 0:
                 num[1] += 1
                 averageRes = (float(trainDict[label]['respond_len']) * (num[1] - 1) + resLen) / num[1]
+            else:
+                averageRes = resLen
         #     if averageRes != 0:
         #         print (averageReq, averageRes, num)
             return averageReq, averageRes, num
