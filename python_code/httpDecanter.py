@@ -187,20 +187,20 @@ class httpDecanter():
             'user_agent': 'user_agent'
         }
 
-        def averageDataLen(label, reqLen, resLen, num):
+        def averageDataLen(label, reqLen, resLen,aveReqLen,aveResLen,num):
             # 計算平均流量值，目前去除 0 的值
             averageReq = 0
             averageRes = 0
             if reqLen != 0:
                 num[0] += 1
-                averageReq = (float(trainDict[label]['request_len']) * (num[0] - 1) + reqLen) / num[0]
+                averageReq = (aveReqLen * (num[0] - 1) + reqLen) / num[0]
             else:
-                averageReq = reqLen
+                averageReq = aveReqLen
             if resLen != 0:
                 num[1] += 1
-                averageRes = (float(trainDict[label]['respond_len']) * (num[1] - 1) + resLen) / num[1]
+                averageRes = (aveResLen * (num[1] - 1) + resLen) / num[1]
             else:
-                averageRes = resLen
+                averageRes = aveResLen
         #     if averageRes != 0:
         #         print (averageReq, averageRes, num)
             return averageReq, averageRes, num
@@ -218,27 +218,28 @@ class httpDecanter():
                         'user_agent': list([r[fgKeys['user_agent']]]),
                         'num': list([0,0])
                     }
+                    
+                   #  check requests len
+                    if int(r['request_body_len'].strip()) != 0:
+                        trainDict[label]['request_len'] = float(r['request_body_len'].strip())
+                    else:
+                        trainDict[label]['request_len'] = 0
+
+                    # check response len
+                    if int(r['response_body_len'].strip()) != 0:
+                        trainDict[label]['respond_len'] = float(r['response_body_len'].strip())
+                    else:
+                        trainDict[label]['respond_len'] = 0
+                    
                 else:
                     # 如果已有 fringerprint 檢查是否需要增加的 info，如 ip
                     for k in fgKeys:
                         tmpData = r[fgKeys[k]].strip()
                         if tmpData not in trainDict[label][k]:
                             trainDict[label].setdefault(k, list()).append(tmpData)
-
-                #  check requests len
-                if int(r['request_body_len'].strip()) != 0:
-                    trainDict[label]['request_len'] = float(r['request_body_len'].strip())
-                else:
-                    trainDict[label]['request_len'] = list()
-
-                # check response len
-                if int(r['response_body_len'].strip()) != 0:
-                    trainDict[label]['respond_len'] = float(r['response_body_len'].strip())
-                else:
-                    trainDict[label]['respond_len'] = list()
                 
                 # 計算平均流量
-                trainDict[label]['request_len'], trainDict[label]['respond_len'], trainDict[label]['num'] = averageDataLen(label, float(r['request_body_len']), float(r['response_body_len']), trainDict[label]['num'])
+                trainDict[label]['request_len'], trainDict[label]['respond_len'], trainDict[label]['num'] = averageDataLen(label, float(r['request_body_len']), float(r['response_body_len']), trainDict[label]['request_len'], trainDict[label]['respond_len'],trainDict[label]['num'])
             else:
                 pass
             
