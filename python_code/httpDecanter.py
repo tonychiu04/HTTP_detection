@@ -87,8 +87,6 @@ class httpDecanter():
         for b in browsers:
             if b in target['user_agent']:
                 target['label'] = 'browser'
-                
-                self.headNode.append(target)
                 break
             
 #         if target['resp_mime_types'] in resTypes:
