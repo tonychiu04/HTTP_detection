@@ -76,8 +76,12 @@ class httpDecanter():
         
         target['label'] = 'background APP'
         
+        # check referrer and for drawing the requests' relation
         if target['referrer'] == '-':
             self.exfiltration.append(target)
+        else:
+            if target['referrer'] not in self.headNode:
+                self.headNode.append(target['referrer'])
             
         # check_useragent
         for b in browsers:
@@ -120,7 +124,6 @@ class httpDecanter():
         headNode = self.headNode
         G = nx.Graph()
         G.clear()
-        head_node = [str(head['host']) for head in headNode]
         
         # 計算連線關係
         for line in data:
@@ -152,7 +155,6 @@ class httpDecanter():
         headNode = self.headNode
         G = nx.Graph()
         G.clear()
-        headNode = [str(head['host']) for head in headNode]
         
         # 計算連線關係
         for line in data:
