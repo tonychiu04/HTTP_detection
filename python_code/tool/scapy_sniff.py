@@ -9,6 +9,12 @@ def http_header(pkt):
     proc1 = [i.strip() for i in payloads.split('\n') if i.strip()]
 
     result = dict()
+
+    if not proc1:
+        # payload is empty
+        # TODO
+        return result
+        
     base_info = proc1[0].split(' ')
     try:
         result['method'], result['uri'], result['version'] = base_info
@@ -34,7 +40,7 @@ def pkt_callback(pkt):
         info = http_header(pkt['Raw'])
         info['src'], info['src_p'] = pkt['IP'].src, pkt.sport
         info['dst'], info['dst_p'] = pkt['IP'].dst, pkt.dport
-        info['len'] = pkt['IP'].len
+        info['time'], info['len'] = pkt.time, pkt['IP'].len
 
         # res.append(info)
         print info
